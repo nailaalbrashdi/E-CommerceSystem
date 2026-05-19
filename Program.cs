@@ -10,104 +10,38 @@ namespace E_CommerceSystem
         static Models.User LoggedInUser;
 
 
-        public static void checkLogin()
+        public static bool checkLogin()
         {
             if (LoggedInUser == null)
             {
                 Console.WriteLine("Please login first!");
-                
+                return false;
             }
-        }
 
+            return true;
+        }
 
         public static void UserMenu()
         {
-            
             Console.WriteLine("choose an option");
-            Console.WriteLine("1.Register a new user");
-            Console.WriteLine("2.Login ");
-            Console.WriteLine("3.Get user");
+            Console.WriteLine("1.Get user details");
+
             int choice = int.Parse(Console.ReadLine());
+
             switch (choice)
             {
                 case 1:
 
-                    Console.WriteLine("Enter your name:");
-                    string name = Console.ReadLine();
-
-                    Console.WriteLine("Enter your Email:");
-                    string email = Console.ReadLine();
-
-                    Console.WriteLine("Enter your password:");
-                    string password = Console.ReadLine();
-
-                    Console.WriteLine("enter you phone number");
-                    string phone = Console.ReadLine();
-
-                    Console.WriteLine("enter your role:");
-                    string role = Console.ReadLine();
-
-
-                    DateTime date = DateTime.Now;
-                    Console.WriteLine("the date is :" + date);
-
-
-                    Db.Users.Add(new Models.User
+                    if (!checkLogin())
                     {
-                        Name = name,
-                        Email = email,
-                        Password = password,
-                        Phone = phone,
-                        Role = role
-                    });
-
-                    Db.SaveChanges();
-
-                    Console.WriteLine("User registered successfully!");
-
-
-                    break;
-
-
-                case 2:
-
-
-                    Console.WriteLine("enter your email:");
-                    string loginemail = Console.ReadLine();
-
-                    Console.WriteLine("Enter your password:");
-                    string loginpassword = Console.ReadLine();
-
-                    var user = Db.Users.FirstOrDefault(u => u.Email == loginemail);
-
-                    if (user == null)
-                    {
-                        Console.WriteLine("User not found!");
                         break;
                     }
-
-                    if (user.Password != loginpassword)
-                    {
-                        Console.WriteLine("Wrong password!");
-                        break;
-                    }
-
-                    LoggedInUser = user;
-
-                    Console.WriteLine("Login successful!");
-                    Console.WriteLine("Welcome " + user.Name);
-
-
-                    break;
-
-                case 3:
-
-                    checkLogin();
 
                     Console.WriteLine("Enter user ID:");
                     int id = int.Parse(Console.ReadLine());
 
-                    var userById = Db.Users.FirstOrDefault(u => u.UserId == id);
+                    var userById = Db.Users
+                        .FirstOrDefault(u => u.UserId == id);
 
                     if (userById == null)
                     {
@@ -124,9 +58,12 @@ namespace E_CommerceSystem
 
                     break;
 
+                default:
 
+                    Console.WriteLine("Invalid option!");
+
+                    break;
             }
-
         }
 
         public static void ProductMenu()
@@ -141,7 +78,10 @@ namespace E_CommerceSystem
             {
                 case 1:
 
-                    checkLogin();
+                    if (!checkLogin())
+                    {
+                        break;
+                    }
 
                     Console.WriteLine("Enter product name:");
                     string name = Console.ReadLine();
@@ -169,7 +109,10 @@ namespace E_CommerceSystem
 
                 case 2:
 
-                    checkLogin();
+                    if (!checkLogin())
+                    {
+                        break;
+                    }
 
                     Console.WriteLine("Enter product ID to update:");
                     int id = int.Parse(Console.ReadLine());
@@ -213,7 +156,10 @@ namespace E_CommerceSystem
 
                 case 3:
 
-                    checkLogin();
+                    if (!checkLogin())
+                    {
+                        break;
+                    }
 
                     Console.WriteLine("=== SEARCH PRODUCTS ===");
                     Console.WriteLine("1. Search by Name");
@@ -284,7 +230,10 @@ namespace E_CommerceSystem
 
                 case 4:
 
-                    checkLogin();
+                    if (!checkLogin())
+                    {
+                        break;
+                    }
 
                     Console.WriteLine("Enter Product ID:");
                     int productid = int.Parse(Console.ReadLine());
@@ -323,7 +272,10 @@ namespace E_CommerceSystem
             {
                 case 1:
 
-                    checkLogin();
+                    if (!checkLogin())
+                    {
+                        break;
+                    }
 
                     Console.WriteLine("Enter User ID:");
                     int userId = int.Parse(Console.ReadLine());
@@ -391,7 +343,10 @@ namespace E_CommerceSystem
 
                 case 2:
 
-                    checkLogin();
+                    if (!checkLogin())
+                    {
+                        break;
+                    }
 
                     Console.WriteLine("Enter User ID:");
                     int USERId = int.Parse(Console.ReadLine());
@@ -420,9 +375,12 @@ namespace E_CommerceSystem
 
                 case 3:
 
-                    checkLogin();
+                    if (!checkLogin())
+                    {
+                        break;
+                    }
 
-   
+
                     Console.WriteLine("Enter Order ID:");
                     int orderId = int.Parse(Console.ReadLine());
 
@@ -477,7 +435,10 @@ namespace E_CommerceSystem
 
                 case 1:
 
-                    checkLogin();
+                    if (!checkLogin())
+                    {
+                        break;
+                    }
 
                     Console.WriteLine("Enter Product ID:");
                     int productId = int.Parse(Console.ReadLine());
@@ -530,7 +491,10 @@ namespace E_CommerceSystem
 
                 case 2:
 
-                    checkLogin();
+                    if (!checkLogin())
+                    {
+                        break;
+                    }
 
                     Console.WriteLine("Enter Product ID:");
                     int PRODUCTID = int.Parse(Console.ReadLine());
@@ -585,7 +549,11 @@ namespace E_CommerceSystem
 
                 case 3:
 
-                    checkLogin();
+                    if (!checkLogin())
+                    {
+                        break;
+                    }
+
                     Console.WriteLine("1. Update Review");
                     Console.WriteLine("2. Delete Review");
 
@@ -644,84 +612,166 @@ namespace E_CommerceSystem
             {
 
             Db.Database.EnsureCreated();
+
             bool exit = false;
 
-                while (exit==false)
-
+            while (!exit)
+            {
+                
+                while (LoggedInUser == null)
                 {
+                    Console.WriteLine("=== AUTHENTICATION MENU ===");
+                    Console.WriteLine("1. Register");
+                    Console.WriteLine("2. Login");
+                    Console.WriteLine("3. Exit");
 
-                    Console.WriteLine("Welcome to the E-Commerce System!");
-                    Console.WriteLine("Please select an option:");
+                    int authChoice = int.Parse(Console.ReadLine());
+
+                    switch (authChoice)
+                    {
+                       
+                        case 1:
+
+                            Console.WriteLine("Enter your name:");
+                            string name = Console.ReadLine();
+
+                            Console.WriteLine("Enter your email:");
+                            string email = Console.ReadLine();
+
+                            
+                            var existingUser = Db.Users
+                                .FirstOrDefault(u => u.Email == email);
+
+                            if (existingUser != null)
+                            {
+                                Console.WriteLine("This email is already registered!");
+                                break;
+                            }
+
+                            Console.WriteLine("Enter your password:");
+                            string password = Console.ReadLine();
+
+                            Console.WriteLine("Enter phone number:");
+                            string phone = Console.ReadLine();
+
+                            Console.WriteLine("Enter role:");
+                            string role = Console.ReadLine();
+
+                            var newUser = new Models.User
+                            {
+                                Name = name,
+                                Email = email,
+                                Password = password,
+                                Phone = phone,
+                                Role = role
+                            };
+
+                            Db.Users.Add(newUser);
+                            Db.SaveChanges();
+
+                            Console.WriteLine("Registration successful!");
+                            Console.WriteLine("Please login.");
+
+                            break;
+
+                      
+                        case 2:
+
+                            Console.WriteLine("Enter email:");
+                            string loginEmail = Console.ReadLine();
+
+                            Console.WriteLine("Enter password:");
+                            string loginPassword = Console.ReadLine();
+
+                            var user = Db.Users.FirstOrDefault(u =>
+                                u.Email == loginEmail &&
+                                u.Password == loginPassword);
+
+                            if (user == null)
+                            {
+                                Console.WriteLine("Invalid email or password!");
+                                break;
+                            }
+
+                            LoggedInUser = user;
+
+                            Console.WriteLine("Login successful!");
+                            Console.WriteLine("Welcome " + LoggedInUser.Name);
+
+                            break;
+
+                        
+                        case 3:
+
+                            exit = true;
+
+                            break;
+
+                        default:
+
+                            Console.WriteLine("Invalid option!");
+                            break;
+                    }
+                }
+
+                
+
+                while (LoggedInUser != null)
+                {
+                    Console.WriteLine("\n=== MAIN SYSTEM MENU ===");
                     Console.WriteLine("1. User APIs");
                     Console.WriteLine("2. Product APIs");
-                    Console.WriteLine("3. ORDER APIs");
-                    Console.WriteLine("4. REVIEW APIs");
-                    Console.WriteLine("5. Exit");
+                    Console.WriteLine("3. Order APIs");
+                    Console.WriteLine("4. Review APIs");
+                    Console.WriteLine("5. Logout");
 
                     int choice = int.Parse(Console.ReadLine());
+
                     switch (choice)
                     {
                         case 1:
-
                             UserMenu();
-
                             break;
-
 
                         case 2:
-
                             ProductMenu();
-
                             break;
 
-
-
                         case 3:
-
                             OrderMenu();
-
                             break;
 
                         case 4:
-
-                           ReviewMenu();
-
+                            ReviewMenu();
                             break;
 
                         case 5:
 
-                        Console.WriteLine("Exiting the system ");
-                        Console.WriteLine("Thank you for using the system....");
-                        exit = true;
+                            LoggedInUser = null;
 
+                            Console.WriteLine("Logged out successfully!");
+                           
                             break;
 
-
-
                         default:
-                         
-                        Console.WriteLine("Invalide option ");
-                            
-                        break;
+
+                            Console.WriteLine("Invalid option!");
+                            break;
                     }
-
-
                 }
-
-
-
-
-
-
-
-
-
-
-
             }
+
+            Console.WriteLine("Thank you for using the system!");
+
+
+        }
 
 
 
         }
+
+
+
     }
+   
 

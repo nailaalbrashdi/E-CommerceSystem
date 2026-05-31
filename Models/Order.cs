@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
@@ -15,29 +16,10 @@ namespace E_CommerceSystem.Models
 
         public List<OrderProducts> OrderProducts { get; set; }= new List<OrderProducts>();
 
-        // Calculated Total Amount
-        [NotMapped]
-        public decimal TotalAmount
-        {
-            get
-            {
-                if (OrderProducts == null || OrderProducts.Count == 0)
-                    return 0;
-
-                return OrderProducts.Sum(op =>
-                    op.Product.Price * op.Quantity);
-            }
-        }
-
-
-
-
-
-
-
-
-
-
+        [Required]
+        public decimal TotalAmount { get; set; }
+        
+ 
         //relations
 
         [ForeignKey("User")]

@@ -38,13 +38,16 @@ namespace E_CommerceSystem.Models
 
         }
 
+
+       
+
         //relations
 
 
-       //public virtual ICollection<Review> productReviews { get; set; }
+        //public virtual ICollection<Review> productReviews { get; set; }
 
 
-        
+
     }
 
 }
